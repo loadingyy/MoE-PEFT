@@ -38,7 +38,7 @@ then enter the following code:
 ```python
 import moe_peft
 moe_peft.setup_logging("INFO")
-moe_peft.backend.check_available()
+moe_peft.executor.check_available()
 ```
 
 Expected output:
@@ -65,14 +65,12 @@ MoE-PEFT: NVIDIA CUDA initialized successfully.
 git clone https://github.com/TUDB-Labs/MoE-PEFT
 cd moe_peft
 # Optional but recommended
-conda create -n moe_peft python=3.11
+conda create -n moe_peft python=3.12
 conda activate moe_peft
 # Install requirements
 pip3 install -r requirements.txt --upgrade
 # Install extra requirements
-pip3 install ninja
-pip3 install bitsandbytes==0.43.1
-pip3 install flash-attn==2.5.8 --no-build-isolation
+bash misc/install-extra-linux.sh
 ```
 
 ## Verification
@@ -88,7 +86,7 @@ then enter the following code:
 ```python
 import moe_peft
 moe_peft.setup_logging("INFO")
-moe_peft.backend.check_available()
+moe_peft.executor.check_available()
 ```
 
 Expected output:
@@ -116,7 +114,7 @@ MoE-PEFT: NVIDIA CUDA initialized successfully.
 git clone https://github.com/TUDB-Labs/MoE-PEFT
 cd moe_peft
 # Optional but recommended
-conda create -n moe_peft python=3.11
+conda create -n moe_peft python=3.12
 conda activate moe_peft
 # Install requirements (CUDA 12.1)
 pip3 install torch==2.3.1 --index-url https://download.pytorch.org/whl/cu121
@@ -138,7 +136,7 @@ then enter the following code:
 ```python
 import moe_peft
 moe_peft.setup_logging("INFO")
-moe_peft.backend.check_available()
+moe_peft.executor.check_available()
 ```
 
 Expected output:
@@ -164,7 +162,7 @@ MoE-PEFT: NVIDIA CUDA initialized successfully.
 git clone https://github.com/TUDB-Labs/MoE-PEFT
 cd moe_peft
 # Optional but recommended
-conda create -n moe_peft python=3.11
+conda create -n moe_peft python=3.12
 conda activate moe_peft
 # Install requirements
 pip3 install -r requirements.txt --upgrade
@@ -183,7 +181,7 @@ then enter the following code:
 ```python
 import moe_peft
 moe_peft.setup_logging("INFO")
-moe_peft.backend.check_available()
+moe_peft.executor.check_available()
 ```
 
 Expected output:

@@ -6,8 +6,9 @@ from typing import Dict, List
 
 import torch
 
+from .adapters import MixLoraConfig
+from .common import InputData, LLMBatchConfig, LLMModelInput, Prompt
 from .model import LLMModel
-from .modules import InputData, LLMBatchConfig, LLMModelInput, MixLoraConfig, Prompt
 from .tasks import BasicMetric, BasicTask, CommonSenseTask, task_dict
 from .tokenizer import Tokenizer
 
@@ -183,7 +184,7 @@ def _compute_metrcis(model, current_configs, sequence_lengths, batch_labels, out
                         router_statistic_[idx] += val
                 for idx, val in enumerate(router_statistic_):
                     logging.info(
-                        f"{config.adapter_name}: expert {idx}, load = {val/32}"
+                        f"{config.adapter_name}: expert {idx}, load = {val / 32}"
                     )
 
         batch_size = logits.shape[0]
@@ -217,7 +218,9 @@ def _compute_result(model, configs, save_file):
     for config in configs:
         result = {
             "adapter_name": config.adapter_name,
-            "task_name": config.task_name,
+            "task_name": (
+                config.task_name if config.data_path is None else config.data_path
+            ),
             "date_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
             "metrics": {},
         }

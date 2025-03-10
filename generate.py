@@ -22,7 +22,7 @@ def main(
     flash_attn: bool = False,
     max_seq_len: int = None,
     stream: bool = False,
-    device: str = moe_peft.backend.default_device_name(),
+    device: str = moe_peft.executor.default_device_name(),
 ):
 
     model = moe_peft.LLMModel.from_pretrained(
@@ -56,9 +56,9 @@ def main(
     )
 
     for prompt in output[adapter_name]:
-        print(f"\n{'='*10}\n")
+        print(f"\n{'=' * 10}\n")
         print(prompt)
-        print(f"\n{'='*10}\n")
+        print(f"\n{'=' * 10}\n")
 
 
 if __name__ == "__main__":

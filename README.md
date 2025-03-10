@@ -10,39 +10,39 @@ MoE-PEFT is an open-source *LLMOps* framework built on [m-LoRA](https://github.c
 
 - Concurrent fine-tuning, evaluation, and inference of multiple adapters with a shared pre-trained model.
 
-- **MoE PEFT** optimization, mainly for [MixLoRA](https://github.com/TUDB-Labs/MixLoRA) and other MoE implementation.
+- **MoE PEFT** optimization, mainly for [MixLoRA](https://github.com/TUDB-Labs/MixLoRA) and other MoLE implementation.
 
 - Support for multiple PEFT algorithms and various pre-trained models.
 
 - Seamless integration with the [HuggingFace](https://huggingface.co) ecosystem.
 
-You can try MoE-PEFT with [Google Colab](https://githubtocolab.com/TUDB-Labs/MoE-PEFT/blob/main/misc/finetune-demo.ipynb) before local installation.
+You can try MoE-PEFT with [Google Colab](https://colab.research.google.com/github/TUDB-Labs/MoE-PEFT/blob/main/misc/finetune-demo.ipynb) before local installation.
 
 ## Supported Platform
 
-| OS      | Backend | Model Precision        | Quantization  | Flash Attention |
+| OS      | Executor | Model Precision        | Quantization  | Flash Attention |
 |---------|---------|------------------------|---------------|-----------------|
 | Linux   | CUDA    | FP32, FP16, TF32, BF16 | 8bit and 4bit | &check;         |
 | Windows | CUDA    | FP32, FP16, TF32, BF16 | 8bit and 4bit | -               |
 | macOS   | MPS     | FP32, FP16, BF16       | &cross;       | &cross;         |
 | All     | CPU     | FP32, FP16, BF16       | &cross;       | &cross;         |
 
-You can use the `MOE_PEFT_BACKEND_TYPE` environment variable to force MoE-PEFT to use a specific backend. For example, if you want MoE-PEFT to run only on CPU, you can set `MOE_PEFT_BACKEND_TYPE=CPU` before importing `moe_peft`.
+You can use the `MOE_PEFT_EXECUTOR_TYPE` environment variable to force MoE-PEFT to use a specific executor. For example, if you want MoE-PEFT to run only on CPU, you can set `MOE_PEFT_EXECUTOR_TYPE=CPU` before importing `moe_peft`.
 
 ## Supported Pre-trained Models
 
 |         | Model                                            | Model Size  |
 |---------|--------------------------------------------------|-------------|
 | &check; | [LLaMA 1/2](https://huggingface.co/meta-llama)   | 7B/13B/70B  |
-| &check; | [LLaMA 3/3.1](https://huggingface.co/meta-llama) | 8B/70B      |
+| &check; | [LLaMA 3.x](https://huggingface.co/meta-llama)   | 3B/8B/70B   |
 | &check; | [Yi 1/1.5](https://huggingface.co/01-ai)         | 6B/9B/34B   |
 | &check; | [TinyLLaMA](https://huggingface.co/TinyLlama)    | 1.1B        |
-| &check; | [Qwen 1.5/2](https://huggingface.co/Qwen)        | 0.5B ~ 72B  |
+| &check; | [Qwen 1.5/2.x](https://huggingface.co/Qwen)      | 0.5B ~ 72B  |
 | &check; | [Gemma](https://huggingface.co/google)           | 2B/7B       |
 | &check; | [Gemma 2](https://huggingface.co/google)         | 9B/27B      |
 | &check; | [Mistral](https://huggingface.co/mistralai)      | 7B          |
 | &check; | [Phi 1.5/2](https://huggingface.co/microsoft)    | 2.7B        |
-| &check; | [Phi 3/3.5](https://huggingface.co/microsoft)    | 3.8B/7B/14B |
+| &check; | [Phi 3.x/4](https://huggingface.co/microsoft)    | 3.8B/7B/14B |
 | &check; | [ChatGLM 1/2/3](https://huggingface.co/THUDM)    | 6B          |
 | &check; | [GLM 4](https://huggingface.co/THUDM)            | 6B          |
 
@@ -54,8 +54,7 @@ You can use the `MOE_PEFT_BACKEND_TYPE` environment variable to force MoE-PEFT t
 | &check; | [MoLA](https://arxiv.org/abs/2402.08562)                 | `"routing_strategy": "mola", "num_experts": 8`            |
 | &check; | [LoRAMoE](https://arxiv.org/abs/2312.09979)              | `"routing_strategy": "loramoe", "num_experts": 8`         |
 | &check; | [MixLoRA](https://arxiv.org/abs/2404.15159)              | `"routing_strategy": "mixlora", "num_experts": 8`         |
-| &check; | MixLoRA-Switch                                           | `"routing_strategy": "mixlora-switch", "num_experts": 8`  |
-| &check; | MixLoRA-Dynamic                                          | `"routing_strategy": "mixlora-dynamic", "num_experts": 8` |
+| &check; | [LoRA](https://arxiv.org/abs/2106.09685)                 | `"r": 8, "lora_alpha": 16, "lora_dropout": 0.05`          |
 | &check; | [QLoRA](https://arxiv.org/abs/2402.12354)                | See *Quantize Methods*                                    |
 | &check; | [LoRA+](https://arxiv.org/abs/2402.12354)                | `"loraplus_lr_ratio": 20.0`                               |
 | &check; | [DoRA](https://arxiv.org/abs/2402.09353)                 | `"use_dora": true`                                        |

@@ -9,6 +9,7 @@ import torch
 from transformers.utils import is_flash_attn_2_available
 
 import moe_peft
+import moe_peft.adapters
 
 # Command Line Arguments
 parser = argparse.ArgumentParser(description="MoE-PEFT main program")
@@ -144,8 +145,10 @@ def init_adapter_config(
     config_list = []
 
     if config["cutoff_len"] == -1:
-        config["cutoff_len"] = llm_model.max_seq_len_
-        logging.info(f"Setting cutoff_len to {llm_model.max_seq_len_} automatically.")
+        config["cutoff_len"] = llm_model.config_.max_seq_len_
+        logging.info(
+            f"Setting cutoff_len to {llm_model.config_.max_seq_len_} automatically."
+        )
 
     for lora_config in config["lora"]:
         adapter_name = lora_config["name"]
@@ -164,7 +167,7 @@ def init_adapter_config(
         if args.load_adapter:
             llm_model.load_adapter(adapter_path, adapter_name)
         else:
-            llm_model.init_adapter(moe_peft.lora_config_factory(lora_config))
+            llm_model.init_adapter(moe_peft.adapters.lora_config_factory(lora_config))
 
         if args.inference:
             config_class = moe_peft.GenerateConfig(adapter_name=adapter_name)
@@ -211,12 +214,12 @@ def inference(
             cache_implementation=args.cache_implementation,
             stream_callback=callback,
         )
-        print(f"\n{'='*10}\n")
+        print(f"\n{'=' * 10}\n")
         print(f"PROMPT: {input_raw}")
         for adapter_name, output in outputs.items():
             print(f"{adapter_name} OUTPUT:")
             print(output[0])
-        print(f"\n{'='*10}\n")
+        print(f"\n{'=' * 10}\n")
 
 
 # Main Function
@@ -232,15 +235,15 @@ if __name__ == "__main__":
 
     moe_peft.setup_logging("INFO", args.log_file)
 
-    moe_peft_backend = moe_peft.backend
+    moe_peft_executor = moe_peft.executor
 
-    if not moe_peft_backend.check_available():
+    if not moe_peft_executor.check_available():
         exit(-1)
 
     if args.attn_impl is None:
         if (
             inference_mode
-            and moe_peft_backend.device_name() == "cuda"
+            and moe_peft_executor.device_name() == "cuda"
             and is_flash_attn_2_available()
         ):
             args.attn_impl = "flash_attn"
@@ -248,11 +251,11 @@ if __name__ == "__main__":
             args.attn_impl = "eager"
 
     if args.device is None:
-        args.device = moe_peft.backend.default_device_name()
+        args.device = moe_peft.executor.default_device_name()
 
-    moe_peft_backend.use_deterministic_algorithms(args.deterministic)
-    moe_peft_backend.allow_tf32(args.tf32)
-    moe_peft_backend.manual_seed(args.seed)
+    moe_peft_executor.use_deterministic_algorithms(args.deterministic)
+    moe_peft_executor.allow_tf32(args.tf32)
+    moe_peft_executor.manual_seed(args.seed)
 
     with open(args.config, "r", encoding="utf8") as fp:
         config = json.load(fp)
@@ -260,7 +263,7 @@ if __name__ == "__main__":
     tokenizer, model = load_base_model()
     adapters = init_adapter_config(config, model)
 
-    moe_peft_backend.empty_cache()
+    moe_peft_executor.empty_cache()
 
     if os.getenv("MOE_PEFT_EVALUATE_MODE") is None:
         logging.info("Using efficient operators.")
